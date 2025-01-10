@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback de Clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .actions button {
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .actions button:hover {
+            background-color: #e53935;
+        }
+        .edit-btn {
+            background-color: #ffa500;
+        }
+        .edit-btn:hover {
+            background-color: #ff8c00;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Feedback de Clientes</h1>
+
+    <form id="feedback-form">
+        <label for="username">Nome de Usuário:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="level">Nível:</label>
+        <select id="level" name="level" required>
+            <option value="1">1 - Iniciante</option>
+            <option value="2">2 - Intermediário</option>
+            <option value="3">3 - Avançado</option>
+        </select>
+
+        <label for="feedback">Feedback:</label>
+        <textarea id="feedback" name="feedback" rows="4" required></textarea>
+
+        <button type="submit" class="btn">Adicionar Feedback</button>
+    </form>
+
+    <table id="feedback-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Nome de Usuário</th>
+                <th>Nível</th>
+                <th>Feedback</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    // Função para carregar feedbacks salvos
+    function loadFeedbacks() {
+        const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+        const tbody = document.querySelector('#feedback-table tbody');
+        tbody.innerHTML = '';
+
+        feedbacks.forEach((feedback, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${feedback.date}</td>
+                <td>${feedback.username}</td>
+                <td>${feedback.level}</td>
+                <td>${feedback.feedback}</td>
+                <td class="actions">
+                    <button class="edit-btn" onclick="editFeedback(${index})">Editar</button>
+                    <button onclick="deleteFeedback(${index})">Excluir</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Função para adicionar feedback
+    document.getElementById('feedback-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const level = document.getElementById('level').value;
+        const feedback = document.getElementById('feedback').value;
+
+        const feedbackData = {
+            date: new Date().toLocaleDateString(),
+            username,
+            level,
+            feedback
+        };
+
+        const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+        feedbacks.push(feedbackData);
+        localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+        // Limpar o formulário
+        document.getElementById('feedback-form').reset();
+        loadFeedbacks();
+    });
+
+    // Função para excluir feedback
+    function deleteFeedback(index) {
+        const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+        feedbacks.splice(index, 1);
+        localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+        loadFeedbacks();
+    }
+
+    // Função para editar feedback
+    function editFeedback(index) {
+        const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+        const feedback = feedbacks[index];
+
+        document.getElementById('username').value = feedback.username;
+        document.getElementById('level').value = feedback.level;
+        document.getElementById('feedback').value = feedback.feedback;
+
+        // Atualizar a ação de submit para editar
+        const submitButton = document.querySelector('form button');
+        submitButton.textContent = 'Atualizar Feedback';
+        submitButton.removeEventListener('click', handleSubmit);
+        submitButton.addEventListener('click', function() {
+            feedbacks[index] = {
+                date: new Date().toLocaleDateString(),
+                username: document.getElementById('username').value,
+                level: document.getElementById('level').value,
+                feedback: document.getElementById('feedback').value
+            };
+            localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+            loadFeedbacks();
+            document.getElementById('feedback-form').reset();
+            submitButton.textContent = 'Adicionar Feedback';
+            submitButton.removeEventListener('click', arguments.callee);
+            submitButton.addEventListener('click', handleSubmit);
+        });
+    }
+
+    // Função para submeter o formulário
+    function handleSubmit() {
+        const username = document.getElementById('username').value;
+        const level = document.getElementById('level').value;
+        const feedback = document.getElementById('feedback').value;
+
+        const feedbackData = {
+            date: new Date().toLocaleDateString(),
+            username,
+            level,
+            feedback
+        };
+
+        const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+        feedbacks.push(feedbackData);
+        localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+        // Limpar o formulário
+        document.getElementById('feedback-form').reset();
+        loadFeedbacks();
+    }
+
+    // Carregar feedbacks ao iniciar
+    window.onload = loadFeedbacks;
+</script>
+
+</body>
+</html>
