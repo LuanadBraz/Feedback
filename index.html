@@ -3,86 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback de Clientes</title>
+    <title>Feedback de Clientes Playbonds</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f1f6;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            color: #333;
         }
+
         .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             text-align: center;
+            color: #2d2d2d;
+            font-size: 36px;
             margin-bottom: 20px;
         }
+
         form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            display: grid;
+            gap: 20px;
         }
+
         label {
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
         }
+
         input, select, textarea {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 12px 15px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s;
         }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
         .btn {
             background-color: #4CAF50;
             color: white;
-            padding: 10px 15px;
+            padding: 12px 18px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            width: 100px;
+            font-size: 14px;
+            transition: background-color 0.3s;
         }
+
         .btn:hover {
             background-color: #45a049;
         }
+
         table {
             width: 100%;
-            margin-top: 30px;
+            margin-top: 40px;
             border-collapse: collapse;
         }
-        table, th, td {
-            border: 1px solid #ccc;
+
+        table th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
         }
-        th, td {
-            padding: 10px;
+
+        table td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #ddd;
             text-align: left;
         }
+
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #f7f7f7;
         }
+
         .actions button {
-            background-color: #f44336;
-            color: white;
-            padding: 5px 10px;
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 6px 12px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
         }
+
         .actions button:hover {
-            background-color: #e53935;
+            background-color: #c0c0c0;
         }
+
         .edit-btn {
             background-color: #ffa500;
+            color: white;
         }
+
         .edit-btn:hover {
             background-color: #ff8c00;
         }
-        @media (max-width: 600px) {
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
             .container {
                 width: 90%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
             }
         }
     </style>
@@ -90,24 +148,40 @@
 <body>
 
 <div class="container">
-    <h1>Feedback de Clientes</h1>
+    <h1>Feedback de Clientes Playbonds</h1>
 
     <form id="feedback-form">
         <label for="username">Nome de Usuário:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" required placeholder="Digite o nome do usuário">
 
         <label for="level">Nível:</label>
         <select id="level" name="level" required>
-            <option value="1">1 - Iniciante</option>
-            <option value="2">2 - Intermediário</option>
-            <option value="3">3 - Avançado</option>
+            <option value="Ativação">Ativação</option>
+            <option value="Cobre">Cobre</option>
+            <option value="Ferro">Ferro</option>
+            <option value="Bronze">Bronze</option>
+            <option value="Prata">Prata</option>
+            <option value="Ouro">Ouro</option>
+            <option value="Platina">Platina</option>
+            <option value="Diamante">Diamante</option>
+            <option value="Titânio">Titânio</option>
+        </select>
+
+        <label for="area">Área:</label>
+        <select id="area" name="area" required>
+            <option value="Video Bingo">Video Bingo</option>
+            <option value="Cassino">Cassino</option>
+            <option value="Esportes">Esportes</option>
+            <option value="Sala de bingo">Sala de bingo</option>
         </select>
 
         <label for="feedback">Feedback:</label>
-        <textarea id="feedback" name="feedback" rows="4" required></textarea>
+        <textarea id="feedback" name="feedback" rows="4" required placeholder="Escreva o feedback aqui..."></textarea>
 
         <button type="submit" class="btn">Adicionar Feedback</button>
     </form>
+
+    <button id="download-btn" class="btn" style="margin-top: 20px;">Baixar Feedbacks em XLS</button>
 
     <table id="feedback-table">
         <thead>
@@ -115,6 +189,7 @@
                 <th>Data</th>
                 <th>Nome de Usuário</th>
                 <th>Nível</th>
+                <th>Área</th>
                 <th>Feedback</th>
                 <th>Ações</th>
             </tr>
@@ -136,10 +211,11 @@
                 <td>${feedback.date}</td>
                 <td>${feedback.username}</td>
                 <td>${feedback.level}</td>
+                <td>${feedback.area}</td>
                 <td>${feedback.feedback}</td>
                 <td class="actions">
                     <button class="edit-btn" onclick="editFeedback(${index})">Editar</button>
-                    <button onclick="deleteFeedback(${index})">Excluir</button>
+                    <button class="delete-btn" onclick="deleteFeedback(${index})">Excluir</button>
                 </td>
             `;
             tbody.appendChild(row);
@@ -152,12 +228,14 @@
 
         const username = document.getElementById('username').value;
         const level = document.getElementById('level').value;
+        const area = document.getElementById('area').value;
         const feedback = document.getElementById('feedback').value;
 
         const feedbackData = {
             date: new Date().toLocaleDateString(),
             username,
             level,
+            area,
             feedback
         };
 
@@ -185,6 +263,7 @@
 
         document.getElementById('username').value = feedback.username;
         document.getElementById('level').value = feedback.level;
+        document.getElementById('area').value = feedback.area;
         document.getElementById('feedback').value = feedback.feedback;
 
         // Atualizar a ação de submit para editar
@@ -196,6 +275,7 @@
                 date: new Date().toLocaleDateString(),
                 username: document.getElementById('username').value,
                 level: document.getElementById('level').value,
+                area: document.getElementById('area').value,
                 feedback: document.getElementById('feedback').value
             };
             localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
@@ -207,27 +287,31 @@
         });
     }
 
-    // Função para submeter o formulário
-    function handleSubmit() {
-        const username = document.getElementById('username').value;
-        const level = document.getElementById('level').value;
-        const feedback = document.getElementById('feedback').value;
-
-        const feedbackData = {
-            date: new Date().toLocaleDateString(),
-            username,
-            level,
-            feedback
-        };
-
+    // Função para baixar dados em formato XLS
+    document.getElementById('download-btn').addEventListener('click', function() {
         const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
-        feedbacks.push(feedbackData);
-        localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
 
-        // Limpar o formulário
-        document.getElementById('feedback-form').reset();
-        loadFeedbacks();
-    }
+        // Estrutura dos dados a serem baixados
+        const data = feedbacks.map(feedback => [
+            feedback.date,
+            feedback.username,
+            feedback.level,
+            feedback.area,
+            feedback.feedback
+        ]);
+
+        // Adicionando o cabeçalho à estrutura dos dados
+        const header = ['Data', 'Nome de Usuário', 'Nível', 'Área', 'Feedback'];
+        data.unshift(header);
+
+        // Gerando o arquivo XLS
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Feedbacks');
+        
+        // Gerando o download
+        XLSX.writeFile(wb, 'feedbacks.xlsx');
+    });
 
     // Carregar feedbacks ao iniciar
     window.onload = loadFeedbacks;
