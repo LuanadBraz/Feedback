@@ -5,9 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback de Clientes Playbonds</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
-        /* Estilos permanecem os mesmos */
+        /* Estilos podem ser ajustados conforme necessário */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        .actions button {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -66,7 +87,7 @@
 <script>
     // Função para carregar feedbacks do servidor
     async function loadFeedbacks() {
-        const response = await fetch('http://localhost:5000/api/feedbacks');
+        const response = await fetch('feedbacks.php');
         const feedbacks = await response.json();
         const tbody = document.querySelector('#feedback-table tbody');
         tbody.innerHTML = '';
@@ -104,7 +125,7 @@
             feedback
         };
 
-        const response = await fetch('http://localhost:5000/api/feedbacks', {
+        const response = await fetch('feedbacks.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
