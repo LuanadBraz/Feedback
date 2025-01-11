@@ -1,5 +1,5 @@
 <?php
-$servername = "localhost"; // Endereço do servidor
+$servername = "jdbc:mysql://localhost:3306/"; // Endereço do servidor
 $username = "root"; // Usuário do banco de dados
 $password = "1864"; // Senha do banco de dados
 $dbname = "feedback_db"; // Nome do banco de dados
